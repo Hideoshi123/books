@@ -2,7 +2,7 @@
     <section>
         <div class="card">
             <div class="card-header d-flex justify-content-end">
-                <button class="btn btn-primary">Crear libro</button>
+                <button class="btn btn-primary" @click="openModal">Crear libro</button>
             </div>
             <div class="card-body">
                 <div class="table-responsive my-4 mx-2">
@@ -24,7 +24,14 @@
                                 <td>{{book.category.name}}</td>
                                 <td>{{book.stock}}</td>
                                 <td>
-                                    <button class="btn btn-primary">hola</button>
+                                    <div class="d-flex justify-content-center">
+                                        <button type="button" class="btn btn-warning btn-sm" @click="editBook(book)" title="Editar">
+                                            <i class="fa-solid fa-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm ms-2" @click="deletBook(book)" title="Eliminar">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
 
@@ -32,17 +39,27 @@
                       </table>
                 </div>
             </div>
+            <div>
+                <book-modal :authors_data="authors_data" :book_data="book" ref="book_modal"/>
+            </div>
         </div>
     </section>
 </template>
 
 <script>
+    import BookModal from './BookModal.vue';
+    import { deleteMessage, successMessage } from '@/helpers/Alerts.js'
     export default {
-        name: '',
-        props: ['books'],
+        components: {
+            BookModal
+        },
+        props: ['books', 'authors_data'],
         //components: {},
         data() {
-            return {}
+            return {
+                modal: null,
+                book: {}
+            }
         },
         // beforeCreate(){
 
@@ -60,7 +77,31 @@
         methods: {
             async index() {
                 $('#book_table').DataTable()
-            }
+                const modal_id = document.getElementById('book_modal')
+                this.modal = new bootstrap.Modal(modal_id)
+                modal_id.addEventListener('hidden.bs.modal', e => {
+				    this.$refs.book_modal.reset()
+			    })
+            },
+            async deletBook({id}){
+                if (!await deleteMessage()) return
+                try {
+                    await axios.delete(`/books/${id}`)
+                    await successMessage({is_delete: true, reload: true})
+                } catch (error) {
+                    console.error(error);
+                }
+            },
+            editBook(book){
+                this.book = book
+                this.openModal()
+            },
+            openModal(){
+                this.modal.show()
+            },
+            /*closeModal() {
+			    this.modal.hide()
+		    }*/
         },
     }
 </script>

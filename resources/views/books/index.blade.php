@@ -4,6 +4,6 @@
             <h1>Lista de Libros</h1>
         </div>
 
-        <the-book-list :books="{{$books}}"/>
+        <the-book-list :books="{{$books}}" :authors_data="{{$authors}}"/>
     </section>
 </x-app>
