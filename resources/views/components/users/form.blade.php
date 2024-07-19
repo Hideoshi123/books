@@ -9,7 +9,7 @@
                 <option value="{{$role}}">{{$role}}</option>
             @endforeach
         </select>
-        
+
         @error('role')
             <span class="invalid-feedback" role="alert">
                 <strong>

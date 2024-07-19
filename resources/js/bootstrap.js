@@ -3,8 +3,16 @@ import * as bootstrap from 'bootstrap'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import jquery from 'jquery'
-import 'datatables.net-bs5'
 import '@fortawesome/fontawesome-free/js/all.js'
+
+import 'datatables.net-bs5';
+import 'datatables.net-buttons-bs5';
+import 'datatables.net-buttons/js/buttons.html5.mjs';
+
+import jsZip from 'jszip'
+import pdfMake from 'pdfmake/build/pdfmake'
+import pdfFonts from 'pdfmake/build/vfs_fonts'
+pdfMake.vfs = pdfFonts.pdfMake.vfs
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -12,6 +20,7 @@ import '@fortawesome/fontawesome-free/js/all.js'
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
+window.JSZip = jsZip
 window.$ = jquery
 window._ = _
 window.Swal = Swal

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class CategoryController extends Controller
 {
@@ -11,16 +12,9 @@ class CategoryController extends Controller
 	{
         $categories = Category::get();
 		//dd($users[0]->toArray());
-		if (!$request->ajax()) return view();
+		if (!$request->ajax()) return view('categories.index');
 		return response()->json(['categories' => $categories], 200);
 	}
-
-
-	public function create()
-	{
-		// view
-	}
-
 
 	public function store(Request $request)
 	{
@@ -29,22 +23,28 @@ class CategoryController extends Controller
         return response()->json([], 200);
 	}
 
+    public function getAll()
+    {
+        $categories = Category::query();
+        return DataTables::of($categories)->toJson();
+    }
 
-	public function show()
+
+	public function show(Category $category)
 	{
+        return response()->json(['category' => $category], 200);
 	}
 
-	public function edit($id)
+	public function update(Category $category, Request $request)
 	{
-		// View
+        $category->update($request->all());
+		$category->save();
+		return response()->json([], 204);
 	}
 
-
-	public function update()
+	public function destroy(Category $category)
 	{
-	}
-
-	public function destroy()
-	{
+        $category->delete();
+        return response()->json([], 204);
 	}
 }
